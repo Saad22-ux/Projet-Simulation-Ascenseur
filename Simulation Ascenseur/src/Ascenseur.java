@@ -1,11 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Ascenseur extends Thread {
     private int etageCourant = 0;
     private Direction directionCourante = Direction.ARRET;
-    private List<Personne> passagers = new ArrayList<>();
+    private List<Personne> passagers = new CopyOnWriteArrayList<>();
 
     // Sémaphore limitant la capacité à 4 places
     private Semaphore capacite = new Semaphore(4, true);
@@ -26,7 +27,7 @@ public class Ascenseur extends Thread {
                 // Déplacement
                 if (directionCourante != Direction.ARRET) {
                     // Simule le temps de trajet entre deux étages (à ajuster pour l'animation)
-                    Thread.sleep(1000);
+                    Thread.sleep(1500);
 
                     if (directionCourante == Direction.MONTEE) {
                         etageCourant++;
@@ -39,8 +40,12 @@ public class Ascenseur extends Thread {
                             " | Direction: " + directionCourante +
                             " | Passagers: " + passagers.size());
                 } else {
-                    // Si on est à l'arrêt, on attend brièvement avant de revérifier
-                    Thread.sleep(200);
+                    // Si on est à l'arrêt et qu'il n'y a pas de demandes, on attend (wait)
+                    synchronized (this) {
+                        if (!demandesEnAttente()) {
+                            this.wait(); // L'ascenseur se met en veille
+                        }
+                    }
                 }
 
             } catch (InterruptedException e) {
@@ -83,7 +88,8 @@ public class Ascenseur extends Thread {
                 System.out.println("Embarquement à l'étage " + etageCourant +
                         " destination -> " + p.getEtageDestination());
             } else {
-                // Si personne ne correspond, on rend la place virtuelle au sémaphore et on arrête l'embarquement
+                // Si personne ne correspond, on rend la place virtuelle au sémaphore et on
+                // arrête l'embarquement
                 capacite.release();
                 break;
             }
@@ -98,7 +104,8 @@ public class Ascenseur extends Thread {
             directionCourante = Direction.MONTEE;
         }
 
-        // S'il est vide et qu'on n'est pas à une extrémité, on vérifie s'il y a des demandes ailleurs
+        // S'il est vide et qu'on n'est pas à une extrémité, on vérifie s'il y a des
+        // demandes ailleurs
         if (passagers.isEmpty() && directionCourante != Direction.ARRET) {
             if (!demandesEnAttente()) {
                 directionCourante = Direction.ARRET;
@@ -107,7 +114,7 @@ public class Ascenseur extends Thread {
     }
 
     // Vérifie s'il y a au moins une personne qui attend dans l'immeuble
-    private boolean demandesEnAttente() {
+    public boolean demandesEnAttente() {
         for (Etage e : etages) {
             if (e.getNombrePersonnesEnAttente() > 0) {
                 return true;
@@ -116,8 +123,24 @@ public class Ascenseur extends Thread {
         return false;
     }
 
+    public synchronized void signalerNouvelleDemande() {
+        this.notifyAll();
+    }
+
     // Getters pour que ton binôme puisse dessiner le GUI
-    public int getEtageCourant() { return etageCourant; }
-    public Direction getDirectionCourante() { return directionCourante; }
-    public int getNombrePassagers() { return passagers.size(); }
+    public int getEtageCourant() {
+        return etageCourant;
+    }
+
+    public Direction getDirectionCourante() {
+        return directionCourante;
+    }
+
+    public int getNombrePassagers() {
+        return passagers.size();
+    }
+
+    public List<Personne> getPassagers() {
+        return passagers;
+    }
 }
