@@ -59,4 +59,4 @@ Le projet exploite une séparation très nette de la couche Vue et de la logique
     ```bash
     java -cp ../out Main
     ```
-4. Le resultat de chaque etape de la simulation sera affiché dans la console ansi que dans une fenetre graphique.
+4. Le résultat de chaque étape de la simulation sera affiché dans la console ainsi que dans une fenêtre graphique developpée avec Swing.
