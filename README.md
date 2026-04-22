@@ -1,13 +1,13 @@
-# 🏢 Projet de Simulation d'Ascenseur Intelligent
+# Projet de Simulation d'Ascenseur Intelligent (Multi-Threading)
 
-## 📖 Présentation Globale
+##  Présentation Globale
 Ce projet est une simulation graphique interactive et multi-threadée d'un système d'ascenseur intelligent. Développé en Java avec l'interface graphique **Swing**, le projet illustre visuellement la gestion concurrente des ressources, en représentant un bâtiment de **5 étages** équipé d'**un seul ascenseur** (limité à une capacité stricte de 4 personnes).
 
 Ce projet s'inscrit dans le cadre de l'apprentissage de l'**architecture orientée objet**, et représente une mise en pratique très complète de la **programmation concurrente** (Multithreading : Mutex, Semaphore, Notifications inter-thread).
 
 ---
 
-## 🚀 Fonctionnalités Clés
+## Fonctionnalités Clés
 - **Génération Aléatoire Autonome** : Des instances de personnes (passagers) apparaissent de façon aléatoire à différents étages avec des destinations choisies au hasard pour alimenter le flux du bâtiment.
 - **Logique d'Ascenseur Intelligent** :
   - L'ascenseur conserve un sens de progression (Montée ou Descente) tant qu'il y a des passagers qui patientent dans ce sens.
@@ -19,7 +19,7 @@ Ce projet s'inscrit dans le cadre de l'apprentissage de l'**architecture orient�
 
 ---
 
-## ⚙️ Workflow et Architecture
+##  Workflow et Architecture
 Le projet exploite une séparation très nette de la couche Vue et de la logique Métier. Le flux s'articule ainsi :
 
 1. **Le Modèle de Données (`Ascenseur`, `Etage`, `Personne`, `Immeuble`) :** 
@@ -34,7 +34,7 @@ Le projet exploite une séparation très nette de la couche Vue et de la logique
 
 ---
 
-## 🛠️ Classes et Fonctions Utilisées
+## Classes et Fonctions Utilisées
 * `Personne.java` : Classe porte-drapeau comportant (Étages de départ et d'arrivée, et la Direction espérée).
 * `Ascenseur.java` : Classe clé qui implémente `Thread`.
   *  *`deposerPassagers()`* : Exclut les passagers qui ont atteint leur objectif final.
@@ -46,7 +46,7 @@ Le projet exploite une séparation très nette de la couche Vue et de la logique
 
 ---
 
-## 🏃 Comment exécuter le code ?
+## Exécution du code :
 1. Placez votre terminal de commande dans le dossier comportant vos sources (`/src`) : 
     ```bash
     cd "Simulation Ascenseur/src"
@@ -59,4 +59,4 @@ Le projet exploite une séparation très nette de la couche Vue et de la logique
     ```bash
     java -cp ../out Main
     ```
-4. Profitez de la fluidité et contrôlez par le résultat de console (ou de logs) le comportement de vos variables au sol.
+4. Le resultat de chaque etape de la simulation sera affiché dans la console ansi que dans une fenetre graphique.
