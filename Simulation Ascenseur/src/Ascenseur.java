@@ -12,6 +12,10 @@ public class Ascenseur extends Thread {
     private Semaphore capacite = new Semaphore(4, true);
     private Etage[] etages;
 
+    // Statistiques de simulation
+    private volatile int passagersTransportes = 0;
+    private volatile long tempsAttenteTotalMs = 0;
+
     public Ascenseur(Etage[] etages) {
         this.etages = etages;
     }
@@ -68,6 +72,8 @@ public class Ascenseur extends Thread {
         for (Personne p : aDescendre) {
             passagers.remove(p);
             capacite.release();
+            passagersTransportes++;
+            tempsAttenteTotalMs += (System.currentTimeMillis() - p.getTempsCreation());
             System.out.println("Une personne descend à l'étage " + etageCourant);
         }
     }
@@ -142,5 +148,15 @@ public class Ascenseur extends Thread {
 
     public List<Personne> getPassagers() {
         return passagers;
+    }
+
+    public int getPassagersTransportes() {
+        return passagersTransportes;
+    }
+
+    public double getTempsAttenteMoyenSecondes() {
+        int count = passagersTransportes;
+        if (count == 0) return 0.0;
+        return (tempsAttenteTotalMs / 1000.0) / count;
     }
 }
